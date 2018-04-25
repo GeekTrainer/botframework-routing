@@ -7,7 +7,8 @@
     "rootDir": "./src",
     "noImplicitAny": true,
     "sourceMap": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "strict": true,
   },
   "compileOnSave": true,
   "include": [
