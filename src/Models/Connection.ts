@@ -1,5 +1,5 @@
 import { ConversationReference } from 'botbuilder';
 
 export interface Connection {
-    userReferences: [ConversationReference, ConversationReference | null]
+    userReferences: [ConversationReference, ConversationReference | null];
 }

@@ -1,6 +1,6 @@
 import { ConversationReference } from 'botbuilder';
 import { Connection } from '../Models/Connection';
-import { ConnectionProvider } from './ConnectionProvider'
+import { ConnectionProvider } from './ConnectionProvider';
 
 function areSameConversation(ref1: Partial<ConversationReference> | null, ref2: Partial<ConversationReference> | null) {
     return ref1 && ref2
@@ -14,9 +14,9 @@ function areSameConversation(ref1: Partial<ConversationReference> | null, ref2: 
 export class InMemoryConnectionProvider implements ConnectionProvider {
     private connections: Connection[] = [];
 
-    findConnectedTo(ref: Partial<ConversationReference>) {
-        if (!ref.user) return Promise.resolve(null);
-        
+    public findConnectedTo(ref: Partial<ConversationReference>) {
+        if (!ref.user) { return Promise.resolve(null); }
+
         const matches = this.connections.filter(c => areSameConversation(c.userReferences[0], ref) || areSameConversation(c.userReferences[1], ref));
 
         // Make sure the user isn't part of multiple connections
