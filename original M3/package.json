@@ -1,7 +1,12 @@
 {
+  "scripts": {
+    "test": "mocha ./lib/tests"
+  },
   "dependencies": {
     "botbuilder": "^4.0.0-m3.0",
-    "restify": "^6.3.4"
+    "restify": "^6.3.4",
+    "ts-node": "^6.0.0",
+    "typescript": "^2.8.3"
   },
   "devDependencies": {
     "@types/chai": "^4.1.2",
