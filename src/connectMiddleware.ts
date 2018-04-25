@@ -5,7 +5,7 @@ export interface Connection {
 }
 
 export interface ConnectionProvider {
-    findConnectedTo(ref: Partial<ConversationReference>): ConversationReference | null;
+    findConnectedTo(ref: Partial<ConversationReference>): Promise<ConversationReference | null>;
 }
 
 export class ConnectMiddleware implements Middleware {
@@ -15,7 +15,7 @@ export class ConnectMiddleware implements Middleware {
         this.provider = provider;
     }
 
-    public onTurn(context: TurnContext, next: () => Promise<void>): Promise<void> {
+    public async onTurn(context: TurnContext, next: () => Promise<void>): Promise<void> {
         // Only handle message activities
         if (context.activity.type !== ActivityTypes.Message || !context.activity.text) {
             return next();
@@ -23,7 +23,7 @@ export class ConnectMiddleware implements Middleware {
 
         // If already connected, forward the message
         const ref = TurnContext.getConversationReference(context.activity);
-        const connected = this.provider.findConnectedTo(ref);
+        const connected = await this.provider.findConnectedTo(ref);
         if (connected !== null) {
             return context.adapter.continueConversation(connected, (forwardContext => {
                 forwardContext.sendActivity(context.activity);
