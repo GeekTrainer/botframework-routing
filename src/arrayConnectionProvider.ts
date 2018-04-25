@@ -9,7 +9,7 @@ export class ArrayConnectionProvider implements ConnectionProvider {
     private connections: Connection[] = [];
 
     findConnectedTo(ref: Partial<ConversationReference>) {
-        if (!ref.user) return null;
+        if (!ref.user) return Promise.resolve(null);
         
         const matches = this.connections.filter(c => areSameUser(c.userReferences[0], ref) || areSameUser(c.userReferences[1], ref));
 
@@ -21,14 +21,14 @@ export class ArrayConnectionProvider implements ConnectionProvider {
         // Find which end of the connection the user is, and return the other end
         if (matches.length === 1) {
             if (areSameUser(matches[0].userReferences[0], ref)) {
-                return matches[0].userReferences[1];
+                return Promise.resolve(matches[0].userReferences[1]);
             }
             if (areSameUser(matches[0].userReferences[1], ref)) {
-                return matches[0].userReferences[0];
+                return Promise.resolve(matches[0].userReferences[0]);
             }
         }
 
         // Not connected
-        return null;
+        return Promise.resolve(null);
     }
 }
