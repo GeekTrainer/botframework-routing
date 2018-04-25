@@ -3,4 +3,6 @@ import { Connection } from '../Models/Connection'
 
 export interface ConnectionProvider {
     getConnections(): Promise<Connection[]>;
+    addConnection(connection: Connection): Promise<void>;
+    addToConnection(existingRef: ConversationReference, refToAdd: ConversationReference): Promise<void>;
 }

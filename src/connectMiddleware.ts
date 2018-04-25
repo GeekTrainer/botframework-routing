@@ -1,14 +1,6 @@
 import { ConversationReference, Middleware, TurnContext, ActivityTypes, Activity } from 'botbuilder';
 import { ConnectionProvider } from './Provider/ConnectionProvider'
-
-function areSameConversation(ref1: Partial<ConversationReference> | null, ref2: Partial<ConversationReference> | null) {
-    return ref1 && ref2
-        && ref1.user && ref2.user
-        && ref1.user.id === ref2.user.id
-        && ref1.conversation && ref2.conversation
-        && ref1.conversation.id === ref2.conversation.id
-        && ref1.channelId === ref2.channelId;
-}
+import { areSameConversation } from './util';
 
 export class ConnectMiddleware implements Middleware {
     private provider: ConnectionProvider;
@@ -59,5 +51,37 @@ export class ConnectMiddleware implements Middleware {
 
         // Not connected
         return Promise.resolve(null);
+    }
+
+    public async startConnection(ref: Partial<ConversationReference>) {
+        // Ensure we aren't already connected to someone
+        const connected = await this.findConnectedTo(ref);
+        if (connected !== null) {
+            return false;
+        }
+
+        this.provider.addConnection({
+            userReferences: [ref, null]
+        });
+
+        return true;
+    }
+
+    public async connectTo(self: ConversationReference, target: ConversationReference) {
+        // Ensure we aren't already connected to someone
+        const selfConnected = await this.findConnectedTo(self);
+        if (selfConnected !== null) {
+            return false;
+        }
+
+        // Ensure target isn't already connected to someone
+        const targetConnected = await this.findConnectedTo(target);
+        if (targetConnected !== null) {
+            return false;
+        }
+
+        this.provider.addToConnection(target, self);
+
+        return;
     }
 }
