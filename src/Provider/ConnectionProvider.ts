@@ -1,5 +1,6 @@
 import { ConversationReference } from 'botbuilder';
+import { Connection } from '../Models/Connection'
 
 export interface ConnectionProvider {
-    findConnectedTo(ref: Partial<ConversationReference>): Promise<ConversationReference | null>;
+    getConnections(): Promise<Connection[]>;
 }
