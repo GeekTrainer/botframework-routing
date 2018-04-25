@@ -1,5 +1,6 @@
 import { HandoffUserState, ArrayHandoffProvider, HandoffMiddleware, HandoffUser } from "../handoff-middleware";
-import { ConversationReference, TurnContext, TestAdapter, Activity } from "botbuilder";
+import { ConversationReference, TurnContext, Activity } from "botbuilder";
+import { CustomTestAdapter } from './helpers'
 import sinon = require("sinon");
 import { userReference, agentReference } from "./helpers";
 import { assert } from "chai";
@@ -40,7 +41,7 @@ describe("Agent management", () => {
     });
 
     it("Logs messages from agent when connected to user", async () => {
-        const adapter = new TestAdapter((context: TurnContext) => Promise.resolve());
+        const adapter = new CustomTestAdapter((context: TurnContext) => Promise.resolve());
         const activity = { type: "message", text: "Hi there", from: agentReference.user } as Activity;
         const context = new TurnContext(adapter, activity);
         const provider = getProvider(HandoffUserState.agent, agentReference);
@@ -51,7 +52,7 @@ describe("Agent management", () => {
     });
 
     it("Routes message to bot when agent not connected", async () => {
-        const adapter = new TestAdapter((context: TurnContext) => Promise.resolve());
+        const adapter = new CustomTestAdapter((context: TurnContext) => Promise.resolve());
         const activity = { type: "message", text: "Hi there", from: agentReference.user } as Activity;
         const context = new TurnContext(adapter, activity);
         const provider = getProvider(HandoffUserState.bot);
@@ -62,7 +63,7 @@ describe("Agent management", () => {
     });
 
     it("Agent can list queue", async () => {
-        const adapter = new TestAdapter((context: TurnContext) => Promise.resolve());
+        const adapter = new CustomTestAdapter((context: TurnContext) => Promise.resolve());
         const activity = { type: "message", text: "#list", from: agentReference.user } as Activity;
         const context = new TurnContext(adapter, activity);
         const provider = getProvider(HandoffUserState.queued);
@@ -76,7 +77,7 @@ describe("Agent management", () => {
     });
 
     it("Agent can connect to longest waiting user", async () => {
-        const adapter = new TestAdapter((context: TurnContext) => Promise.resolve());
+        const adapter = new CustomTestAdapter((context: TurnContext) => Promise.resolve());
         const activity = { type: "message", text: "#connect", from: agentReference.user } as Activity;
         const context = new TurnContext(adapter, activity);
         const provider = getProvider(HandoffUserState.queued);
@@ -89,7 +90,7 @@ describe("Agent management", () => {
     });
 
     it("Agent receives error when calling connect when connected", async () => {
-        const adapter = new TestAdapter((context: TurnContext) => Promise.resolve());
+        const adapter = new CustomTestAdapter((context: TurnContext) => Promise.resolve());
         const activity = { type: "message", text: "#connect", from: agentReference.user } as Activity;
         const context = new TurnContext(adapter, activity);        
         const provider = getProvider(HandoffUserState.agent);
@@ -102,7 +103,7 @@ describe("Agent management", () => {
     });
 
     it("Sends error message when no users are queued", async () => {
-        const adapter = new TestAdapter((context: TurnContext) => Promise.resolve());
+        const adapter = new CustomTestAdapter((context: TurnContext) => Promise.resolve());
         const activity = { type: "message", text: "#connect", from: agentReference.user } as Activity;
         const context = new TurnContext(adapter, activity);        
         const provider = getProvider(HandoffUserState.bot);
@@ -115,7 +116,7 @@ describe("Agent management", () => {
     });
 
     it("Routes messages to user when connected", async () => {
-        const adapter = new TestAdapter((context: TurnContext) => Promise.resolve());
+        const adapter = new CustomTestAdapter((context: TurnContext) => Promise.resolve());
         const activity = { type: "message", text: "Hello user!", from: agentReference.user } as Activity;
         const context = new TurnContext(adapter, activity);        
         const provider = getProvider(HandoffUserState.agent);
@@ -133,7 +134,7 @@ describe("Agent management", () => {
     });
 
     it("Disconnects user", async () => {
-        const adapter = new TestAdapter((context: TurnContext) => Promise.resolve());
+        const adapter = new CustomTestAdapter((context: TurnContext) => Promise.resolve());
         const activity = { type: "message", text: "#disconnect", from: agentReference.user } as Activity;
         const context = new TurnContext(adapter, activity);      
         const provider = getProvider(HandoffUserState.agent);
@@ -169,7 +170,7 @@ describe("User management", () => {
         provider.findOrCreate.returns(createUser(HandoffUserState.bot));
         provider.log.returns(createUser(HandoffUserState.bot));
 
-        const adapter = new TestAdapter((context: TurnContext) => Promise.resolve());
+        const adapter = new CustomTestAdapter((context: TurnContext) => Promise.resolve());
         const activity = { type: "message", text: "Let's log", from: userReference.user } as Activity;
         const context = new TurnContext(adapter, activity);      
 
@@ -183,7 +184,7 @@ describe("User management", () => {
         const provider = sinon.createStubInstance<ArrayHandoffProvider>(ArrayHandoffProvider);
         provider.findOrCreate.returns(createUser(HandoffUserState.bot));
 
-        const adapter = new TestAdapter((context: TurnContext) => Promise.resolve());
+        const adapter = new CustomTestAdapter((context: TurnContext) => Promise.resolve());
         const activity = { type: "message", text: "agent", from: userReference.user } as Activity;
         const context = new TurnContext(adapter, activity);      
 
@@ -199,7 +200,7 @@ describe("User management", () => {
         const provider = sinon.createStubInstance<ArrayHandoffProvider>(ArrayHandoffProvider);
         provider.findOrCreate.returns(createUser(HandoffUserState.queued));
 
-        const adapter = new TestAdapter((context: TurnContext) => Promise.resolve());
+        const adapter = new CustomTestAdapter((context: TurnContext) => Promise.resolve());
         const activity = { type: "message", text: "cancel", from: userReference.user } as Activity;
         const context = new TurnContext(adapter, activity);      
 
@@ -216,7 +217,7 @@ describe("User management", () => {
         provider.findByAgent.returns(createUser(HandoffUserState.agent));
         provider.findOrCreate.returns(createUser(HandoffUserState.agent));
 
-        const adapter = new TestAdapter((context: TurnContext) => Promise.resolve());
+        const adapter = new CustomTestAdapter((context: TurnContext) => Promise.resolve());
         const activity = { type: "message", text: "Hello, agent", from: userReference.user } as Activity;
         const context = new TurnContext(adapter, activity);      
         
