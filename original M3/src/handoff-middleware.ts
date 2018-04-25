@@ -1,4 +1,4 @@
-import { Middleware, TurnContext, ActivityTypes, ConversationReference, ChannelAccount, ConversationAccount, Activity } from 'botbuilder'
+import { Middleware, TurnContext, ActivityTypes, ConversationReference, ChannelAccount, ConversationAccount, Activity } from 'botbuilder';
 
 export enum HandoffUserState {
     bot,
