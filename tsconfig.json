@@ -1,11 +1,19 @@
 {
   "compilerOptions": {
     /* Basic Options */
-    "target": "es2015",
+    "target": "ES2015",
     "module": "commonjs",
     "outDir": "./lib",
     "rootDir": "./src",
     "noImplicitAny": true,
-    "sourceMap": true
-  }
+    "sourceMap": true,
+    "moduleResolution": "node"
+  },
+  "compileOnSave": true,
+  "include": [
+        "src/**/*"
+    ],
+    "exclude": [
+        "src/original M3/**/*"
+    ]
 }

@@ -80,7 +80,7 @@
     "no-duplicate-case": true,
     "no-duplicate-parameter-names": true,
     "no-duplicate-variable": true,
-    "no-empty": true,
+    "no-empty": false,
     "no-empty-interfaces": true,
     "no-empty-line-after-opening-brace": false,
     "no-eval": true,
