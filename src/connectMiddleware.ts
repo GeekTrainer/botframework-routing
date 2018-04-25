@@ -1,9 +1,5 @@
 import { ConversationReference, Middleware, TurnContext, ActivityTypes, Activity } from 'botbuilder';
-import { ConnectionProvider } from './DataStore/ConnectionProvider';
-
-export interface Connection {
-    userReferences: [ConversationReference, ConversationReference | null]
-}
+import { ConnectionProvider } from './Provider/ConnectionProvider'
 
 export class ConnectMiddleware implements Middleware {
     private provider: ConnectionProvider;

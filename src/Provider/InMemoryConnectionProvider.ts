@@ -1,6 +1,6 @@
 import { ConversationReference } from 'botbuilder';
-import { Connection } from './connectMiddleware';
-import { ConnectionProvider } from './DataStore/ConnectionProvider'
+import { Connection } from '../Models/Connection';
+import { ConnectionProvider } from './ConnectionProvider'
 
 function areSameConversation(ref1: Partial<ConversationReference> | null, ref2: Partial<ConversationReference> | null) {
     return ref1 && ref2
@@ -11,7 +11,7 @@ function areSameConversation(ref1: Partial<ConversationReference> | null, ref2: 
         && ref1.channelId === ref2.channelId;
 }
 
-export class ArrayConnectionProvider implements ConnectionProvider {
+export class InMemoryConnectionProvider implements ConnectionProvider {
     private connections: Connection[] = [];
 
     findConnectedTo(ref: Partial<ConversationReference>) {
