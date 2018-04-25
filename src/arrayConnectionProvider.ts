@@ -1,8 +1,13 @@
 import { ConversationReference } from 'botbuilder';
 import { ConnectionProvider, Connection } from './connectMiddleware';
 
-function areSameUser(ref1: Partial<ConversationReference> | null, ref2: Partial<ConversationReference> | null) {
-    return ref1 && ref1.user && ref2 && ref2.user && ref1.user.id === ref2.user.id;
+function areSameConversation(ref1: Partial<ConversationReference> | null, ref2: Partial<ConversationReference> | null) {
+    return ref1 && ref2
+        && ref1.user && ref2.user
+        && ref1.user.id === ref2.user.id
+        && ref1.conversation && ref2.conversation
+        && ref1.conversation.id === ref2.conversation.id
+        && ref1.channelId === ref2.channelId;
 }
 
 export class ArrayConnectionProvider implements ConnectionProvider {
@@ -11,7 +16,7 @@ export class ArrayConnectionProvider implements ConnectionProvider {
     findConnectedTo(ref: Partial<ConversationReference>) {
         if (!ref.user) return Promise.resolve(null);
         
-        const matches = this.connections.filter(c => areSameUser(c.userReferences[0], ref) || areSameUser(c.userReferences[1], ref));
+        const matches = this.connections.filter(c => areSameConversation(c.userReferences[0], ref) || areSameConversation(c.userReferences[1], ref));
 
         // Make sure the user isn't part of multiple connections
         if (matches.length >= 2) {
@@ -20,10 +25,10 @@ export class ArrayConnectionProvider implements ConnectionProvider {
 
         // Find which end of the connection the user is, and return the other end
         if (matches.length === 1) {
-            if (areSameUser(matches[0].userReferences[0], ref)) {
+            if (areSameConversation(matches[0].userReferences[0], ref)) {
                 return Promise.resolve(matches[0].userReferences[1]);
             }
-            if (areSameUser(matches[0].userReferences[1], ref)) {
+            if (areSameConversation(matches[0].userReferences[1], ref)) {
                 return Promise.resolve(matches[0].userReferences[0]);
             }
         }
