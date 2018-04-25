@@ -1,5 +1,6 @@
 import { ConversationReference } from 'botbuilder';
-import { ConnectionProvider, Connection } from './connectMiddleware';
+import { Connection } from './connectMiddleware';
+import { ConnectionProvider } from './DataStore/ConnectionProvider'
 
 function areSameConversation(ref1: Partial<ConversationReference> | null, ref2: Partial<ConversationReference> | null) {
     return ref1 && ref2
