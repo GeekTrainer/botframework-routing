@@ -1,7 +1,6 @@
 {
   "dependencies": {
     "botbuilder": "^4.0.0-m3.0",
-    "botbuilder-services": "^4.0.0-m1.10",
     "restify": "^7.1.1"
   },
   "devDependencies": {
