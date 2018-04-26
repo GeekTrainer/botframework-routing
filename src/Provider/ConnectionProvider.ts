@@ -6,5 +6,5 @@ export interface ConnectionProvider {
     getEstablishedConnections(): Promise<EstablishedConnection[]>;
     addPendingConnection(connection: PendingConnection): Promise<void>;
     addEstablishedConnection(connection: EstablishedConnection): Promise<void>;
-    endConnection(connection: ConversationReference): Promise<void>;
+    endConnection(ref: ConversationReference): Promise<void>;
 }
