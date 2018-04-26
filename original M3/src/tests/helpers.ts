@@ -1,4 +1,4 @@
-import { ConversationReference, ChannelAccount, TestAdapter, TurnContext, Promiseable } from "botbuilder";
+import { ConversationReference, ChannelAccount, TestAdapter, TurnContext, Promiseable, Activity } from "botbuilder";
 
 export class CustomTestAdapter extends TestAdapter {
     public continueConversation(reference: Partial<ConversationReference>, logic: (revocableContext: TurnContext) => Promiseable<void>): Promise<void> {
@@ -10,7 +10,7 @@ export class CustomTestAdapter extends TestAdapter {
 }
 
 export const getConversationReference = (id: string, name: string) => {
-    return { user: { id, name } } as ConversationReference;
+    return TurnContext.getConversationReference( { from: { id, name } } as Activity ) as ConversationReference;
 }
 
 export const userReference = getConversationReference("user", "user");

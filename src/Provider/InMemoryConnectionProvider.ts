@@ -1,11 +1,25 @@
-import { ConversationReference } from 'botbuilder';
-import { Connection } from '../Models/Connection';
+import { PendingConnection, EstablishedConnection } from '../Models/Connection';
 import { ConnectionProvider } from './ConnectionProvider';
 
 export class InMemoryConnectionProvider implements ConnectionProvider {
-    private connections: Connection[] = [];
+    private pendingConnections: PendingConnection[] = [];
+    private establishedConnections: EstablishedConnection[] = [];
 
-    public getConnections(): Promise<Connection[]> {
-        return Promise.resolve(this.connections);
+    getPendingConnections(): Promise<PendingConnection[]> {
+        return Promise.resolve(this.pendingConnections);
+    }
+
+    getEstablishedConnections(): Promise<EstablishedConnection[]> {
+        return Promise.resolve(this.establishedConnections);
+    }
+
+    addPendingConnection(connection: PendingConnection): Promise<void> {
+        this.pendingConnections.push(connection);
+        return Promise.resolve();
+    }
+
+    addEstablishedConnection(connection: EstablishedConnection): Promise<void> {
+        this.establishedConnections.push(connection);
+        return Promise.resolve();
     }
 }

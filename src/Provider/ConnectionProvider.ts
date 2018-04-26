@@ -1,6 +1,9 @@
-import { ConversationReference } from 'botbuilder';
-import { Connection } from '../Models/Connection';
+import { PendingConnection, EstablishedConnection } from '../Models/Connection';
 
 export interface ConnectionProvider {
-    getConnections(): Promise<Connection[]>;
+    getPendingConnections(): Promise<PendingConnection[]>;
+    getEstablishedConnections(): Promise<EstablishedConnection[]>;
+
+    addPendingConnection(connection: PendingConnection): Promise<void>;
+    addEstablishedConnection(connection: EstablishedConnection): Promise<void>;
 }
