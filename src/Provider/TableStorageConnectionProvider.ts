@@ -49,7 +49,7 @@ export class TableStorageConnectionProvider implements ConnectionProvider {
         this.tableService = this.createTableService(this.settings.storageAccountOrConnectionString, this.settings.storageAccessKey, this.settings.host);
     }
 
-    public getPendingConnections(): Promise<PendingConnection[]> {
+    public endConnection(connection: ConversationReference): Promise<void> {
         throw new Error('not implemented');
     }
 
@@ -58,6 +58,10 @@ export class TableStorageConnectionProvider implements ConnectionProvider {
     }
 
     public addEstablishedConnection(connection: EstablishedConnection): Promise<void> {
+        throw new Error('not implemented');
+    }
+
+    public getPendingConnections(): Promise<PendingConnection[]> {
         throw new Error('not implemented');
     }
 

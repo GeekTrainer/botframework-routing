@@ -1,5 +1,4 @@
 import { ConversationReference } from 'botbuilder';
-import { Connection } from './Models/Connection';
 
 export function areSameConversation(ref1: Partial<ConversationReference> | null, ref2: Partial<ConversationReference> | null): boolean {
     return (ref1 !== null && ref2 !== null
@@ -9,4 +8,3 @@ export function areSameConversation(ref1: Partial<ConversationReference> | null,
         && (ref1.conversation.id === ref2.conversation.id)
         && (ref1.channelId === ref2.channelId));
 }
-
