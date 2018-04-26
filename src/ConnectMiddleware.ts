@@ -81,8 +81,10 @@ export class ConnectMiddleware implements Middleware {
             throw new Error('Pending connection does not exist for target');
         }
 
-        // TODO: Remove target's pending connection
+        // Remove target's pending connection
+        await this.provider.endConnection(target);
 
+        // Add a new established connection
         return this.provider.addEstablishedConnection({
             userReferences: [target, self]
         });
