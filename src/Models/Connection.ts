@@ -1,5 +1,9 @@
 import { ConversationReference } from 'botbuilder';
 
-export interface Connection {
-    userReferences: [Partial<ConversationReference>, Partial<ConversationReference> | null]
+export interface PendingConnection {
+    userReference: Partial<ConversationReference>
+}
+
+export interface EstablishedConnection {
+    userReferences: [Partial<ConversationReference>, Partial<ConversationReference>]
 }
