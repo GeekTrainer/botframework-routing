@@ -68,7 +68,7 @@ export class ConnectMiddleware implements Middleware {
     }
 
     // Establish an already pending connection (i.e. join to the other end of a pending connection)
-    public async connectTo(self: ConversationReference, target: ConversationReference) {
+    public async connectTo(self: Partial<ConversationReference>, target: Partial<ConversationReference>) {
         // Ensure self isn't already connected to someone
         if (await this.isPending(self) || await this.isEstablished(self)) {
             throw new Error('Connection already exists for self');
@@ -90,7 +90,7 @@ export class ConnectMiddleware implements Middleware {
         });
     }
 
-    public async endConnection(ref: ConversationReference): Promise<void> {          
+    public async endConnection(ref: Partial<ConversationReference>): Promise<void> {          
         // Ensure we already have a connection
         if (!(await this.isPending(ref) || await this.isEstablished(ref))) {
             throw new Error('Connection does not exist');

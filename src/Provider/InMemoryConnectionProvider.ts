@@ -25,7 +25,7 @@ export class InMemoryConnectionProvider implements ConnectionProvider {
         return Promise.resolve();
     }
 
-    public removeConnection(ref: ConversationReference): Promise<void> {
+    public removeConnection(ref: Partial<ConversationReference>): Promise<void> {
         const pendingConnectionIndex = this.pendingConnections.findIndex(c =>
             areSameConversation(c.userReference, ref));
         const establishedConnectionIndex = this.establishedConnections.findIndex(c =>

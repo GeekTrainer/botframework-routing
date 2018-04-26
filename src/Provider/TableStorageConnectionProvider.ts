@@ -49,7 +49,7 @@ export class TableStorageConnectionProvider implements ConnectionProvider {
         this.tableService = this.createTableService(this.settings.storageAccountOrConnectionString, this.settings.storageAccessKey, this.settings.host);
     }
 
-    public removeConnection(connection: ConversationReference): Promise<void> {
+    public removeConnection(ref: Partial<ConversationReference>): Promise<void> {
         throw new Error('not implemented');
     }
 
