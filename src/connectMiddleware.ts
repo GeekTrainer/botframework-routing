@@ -1,4 +1,4 @@
-import { ConversationReference, Middleware, TurnContext, ActivityTypes, Activity } from 'botbuilder';
+import { ConversationReference, Middleware, TurnContext, ActivityTypes } from 'botbuilder';
 import { ConnectionProvider } from './Provider/ConnectionProvider'
 import { areSameConversation } from './util';
 
@@ -11,11 +11,12 @@ export class ConnectMiddleware implements Middleware {
 
     public async onTurn(context: TurnContext, next: () => Promise<void>): Promise<void> {
         // Only handle message activities
+        // TODO: what other message types should be forwarded? maybe configurable?
         if (context.activity.type !== ActivityTypes.Message || !context.activity.text) {
             return next();
         }
 
-        // If already connected, forward the message
+        // If already connected, forward the message and stop the pipeline
         const ref = TurnContext.getConversationReference(context.activity);
         const connected = await this.findConnectedTo(ref);
         if (connected !== null) {
@@ -29,12 +30,13 @@ export class ConnectMiddleware implements Middleware {
     }
 
     public async findConnectedTo(ref: Partial<ConversationReference>) {
-        if (!ref.user) return Promise.resolve(null);
+        if (!ref.user) throw new Error('User object is undefined');
 
-        const connections = await this.provider.getConnections();
+        // Find established connections that the user is part of
+        const connections = await this.provider.getEstablishedConnections();
         const matches = connections.filter(c => areSameConversation(c.userReferences[0], ref) || areSameConversation(c.userReferences[1], ref));
 
-        // Make sure the user isn't part of multiple connections
+        // Ensure the user isn't part of multiple connections
         if (matches.length >= 2) {
             throw new Error('Multiple connections not allowed');
         }
@@ -53,35 +55,46 @@ export class ConnectMiddleware implements Middleware {
         return Promise.resolve(null);
     }
 
+    // Start a pending connection (i.e. add user to the "waiting" pool)
     public async startConnection(ref: Partial<ConversationReference>) {
-        // Ensure we aren't already connected to someone
-        const connected = await this.findConnectedTo(ref);
-        if (connected !== null) {
-            return false;
+        // Ensure we don't already have a connection
+        if (await this.isPending(ref) || await this.isEstablished(ref)) {
+            throw new Error('Connection already exists');
         }
 
-        this.provider.addConnection({
-            userReferences: [ref, null]
+        return this.provider.addPendingConnection({
+            userReference: ref
         });
-
-        return true;
     }
 
+    // Establish an already pending connection (i.e. join to the other end of a pending connection)
     public async connectTo(self: ConversationReference, target: ConversationReference) {
-        // Ensure we aren't already connected to someone
-        const selfConnected = await this.findConnectedTo(self);
-        if (selfConnected !== null) {
-            return false;
+        // Ensure self isn't already connected to someone
+        if (await this.isPending(self) || await this.isEstablished(self)) {
+            throw new Error('Connection already exists for self');
         }
 
-        // Ensure target isn't already connected to someone
-        const targetConnected = await this.findConnectedTo(target);
-        if (targetConnected !== null) {
-            return false;
+        // Find target's pending connection
+        const allPending = await this.provider.getPendingConnections();
+        const pending = allPending.find(c => areSameConversation(c.userReference, target));
+        if (!pending) {
+            throw new Error('Pending connection does not exist for target');
         }
 
-        this.provider.addToConnection(target, self);
+        // TODO: Remove target's pending connection
 
-        return;
+        return this.provider.addEstablishedConnection({
+            userReferences: [target, self]
+        });
+    }
+
+    private async isPending(ref: Partial<ConversationReference>): Promise<boolean> {
+        const pending = await this.provider.getPendingConnections();
+        return pending.some(c => areSameConversation(c.userReference, ref));
+    }
+
+    private async isEstablished(ref: Partial<ConversationReference>): Promise<boolean> {
+        const est = await this.provider.getEstablishedConnections();
+        return est.some(c => areSameConversation(c.userReferences[0], ref) || areSameConversation(c.userReferences[1], ref));
     }
 }
