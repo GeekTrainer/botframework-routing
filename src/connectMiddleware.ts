@@ -84,4 +84,23 @@ export class ConnectMiddleware implements Middleware {
 
         return;
     }
+
+    public async detachConnection(self: ConversationReference, target: ConversationReference) {
+        // TODO : I need to configure update logic of checking existing connections
+        // Ensure we aren't already connected to someone
+        const selfConnected = await this.findConnectedTo(self);
+        if (selfConnected !== null) {
+            return false;
+        }
+
+        // Ensure target isn't already connected to someone
+        const targetConnected = await this.findConnectedTo(target);
+        if (targetConnected !== null) {
+            return false;
+        }
+
+        this.provider.endConnection(target, self);
+
+        return;
+    }
 }
