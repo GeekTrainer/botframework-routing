@@ -1,4 +1,30 @@
 {
+  "name": "botbuilder-azure",
+  "author": "Microsoft Corp.",
+  "description": "botbuilder-v4-routing module for Microsoft BotBuilder.",
+  "version": "0.0.1",
+  "license": "MIT",
+  "keywords": [
+    "botbuilder",
+    "botframework",
+    "bots",
+    "chatbots",
+    "azure",
+    "routing",
+    "handoff"
+  ],
+  "bugs": {
+    "url": "https://github.com/GeekTrainer/botframework-routing/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GeekTrainer/botframework-routing.git"
+  },
+  "scripts": {
+    "test": "tsc && nyc mocha tests/",
+    "build": "tsc",
+    "clean": "erase /q lib\\*.*"
+  },
   "dependencies": {
     "azure-storage": "^2.8.2",
     "botbuilder": "^4.0.0-m3.0",
@@ -13,6 +39,7 @@
     "@types/sinon": "^4.3.1",
     "chai": "^4.1.2",
     "mocha": "^5.1.1",
-    "sinon": "^4.5.0"
+    "sinon": "^4.5.0",
+    "nyc": "^11.4.1"
   }
 }
