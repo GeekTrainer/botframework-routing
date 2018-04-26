@@ -124,12 +124,16 @@ If you want to contribute, please consider the following:
 Please do not hesitate to report ideas, bugs etc. under
 [issues](https://github.com/tompaana/bot-message-routing/issues)!
 
-### (TODO) Acknowledgements ###
+### Acknowledgements ###
 
 Special thanks to the contributors (in alphabetical order):
 
-* [XXX](https://github.com/XXX)
+* [João Almeida](https://github.com/joalmeid)
+* [Christopher Harrison](https://github.com/GeekTrainer)
+* [Eunji Kim](https://github.com/angie4u)
+* [Alejandro Magencio](https://github.com/magencio)
+* [Nafis Zaman](https://github.com/navzam)
 
-Note that you may not find (all of their) contributions in the change history of this project,
-because all of the code including this core functionality used to reside in
+Note that you may not find all contributions in the change history of this project,
+because all of the code including this core functionality used to reside in the
 [botframework-handoff](https://github.com/GeekTrainer/botframework-handoff) project.
