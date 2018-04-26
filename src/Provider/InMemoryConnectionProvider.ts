@@ -25,14 +25,17 @@ export class InMemoryConnectionProvider implements ConnectionProvider {
     }
 
     endConnection(connection: ConversationReference): Promise<void> {  
-        const pendingConnectionIndex = this.pendingConnections.findIndex(c=> (c.userReference.conversation == connection.conversation));     
-        const establishedConnectionIndex = this.establishedConnections.findIndex(c=> c.userReferences[0].conversation == connection.conversation);
+        const pendingConnectionIndex = this.pendingConnections.findIndex(c=> 
+            (c.userReference.conversation == connection.conversation));     
+        const establishedConnectionIndex = this.establishedConnections.findIndex(c=> 
+            (c.userReferences[0].conversation == connection.conversation) || 
+            (c.userReferences[1].conversation == connection.conversation));
         
         if(pendingConnectionIndex !== -1){
-            this.pendingConnections.slice(pendingConnectionIndex);
+            this.pendingConnections.splice(pendingConnectionIndex);
         }        
         if(establishedConnectionIndex !== -1){
-            this.establishedConnections.slice(establishedConnectionIndex);
+            this.establishedConnections.splice(establishedConnectionIndex);
         }        
 
         return Promise.resolve();
