@@ -82,12 +82,20 @@ export class ConnectMiddleware implements Middleware {
         }
 
         // Remove target's pending connection
-        await this.provider.endConnection(target);
+        await this.provider.removeConnection(target);
 
         // Add a new established connection
         return this.provider.addEstablishedConnection({
             userReferences: [target, self]
         });
+    }
+
+    public async endConnection(ref: ConversationReference): Promise<void> {          
+        // Ensure we already have a connection
+        if (!(await this.isPending(ref) || await this.isEstablished(ref))) {
+            throw new Error('Connection does not exist');
+        }
+        return this.provider.removeConnection(ref);        
     }
 
     private async isPending(ref: Partial<ConversationReference>): Promise<boolean> {
@@ -98,13 +106,5 @@ export class ConnectMiddleware implements Middleware {
     private async isEstablished(ref: Partial<ConversationReference>): Promise<boolean> {
         const est = await this.provider.getEstablishedConnections();
         return est.some(c => areSameConversation(c.userReferences[0], ref) || areSameConversation(c.userReferences[1], ref));
-    }
-
-    public async detachConnection(ref: ConversationReference): Promise<void> {          
-        // Ensure we don't already have a connection
-        if (!(await this.isPending(ref) || await this.isEstablished(ref))) {
-            throw new Error('Connection does not exists');
-        }
-        return this.provider.endConnection(ref);        
     }
 }

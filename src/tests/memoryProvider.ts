@@ -55,7 +55,7 @@ describe("In Memory Provider manages users", () => {
         await provider.addPendingConnection({
             userReference: user1Reference
         });
-        await provider.endConnection(user1Reference);
+        await provider.removeConnection(user1Reference);
 
         let pending = await provider.getPendingConnections();
 
@@ -66,7 +66,7 @@ describe("In Memory Provider manages users", () => {
         await provider.addEstablishedConnection({
             userReferences: [ user1Reference, user2Reference ]
         });
-        await provider.endConnection(user1Reference);
+        await provider.removeConnection(user1Reference);
 
         let established = await provider.getEstablishedConnections();
 
@@ -77,7 +77,7 @@ describe("In Memory Provider manages users", () => {
         await provider.addEstablishedConnection({
             userReferences: [ user1Reference, user2Reference ]
         });
-        await provider.endConnection(user2Reference);
+        await provider.removeConnection(user2Reference);
 
         let established = await provider.getEstablishedConnections();
 
@@ -88,7 +88,7 @@ describe("In Memory Provider manages users", () => {
         await provider.addPendingConnection({
             userReference: user1Reference
         });
-        await provider.endConnection(user2Reference);
+        await provider.removeConnection(user2Reference);
 
         let pending = await provider.getPendingConnections();
 
@@ -100,7 +100,7 @@ describe("In Memory Provider manages users", () => {
         await provider.addEstablishedConnection({
             userReferences: [ user1Reference, user2Reference ]
         });
-        await provider.endConnection(user3Reference);
+        await provider.removeConnection(user3Reference);
 
         let established = await provider.getEstablishedConnections();
 
@@ -110,7 +110,7 @@ describe("In Memory Provider manages users", () => {
     });
 
     it("End non existing connection when no connections", async () => {
-        await provider.endConnection(user1Reference);
+        await provider.removeConnection(user1Reference);
 
         let pending = await provider.getPendingConnections();
         let established = await provider.getEstablishedConnections();
