@@ -97,4 +97,12 @@ export class ConnectMiddleware implements Middleware {
         const est = await this.provider.getEstablishedConnections();
         return est.some(c => areSameConversation(c.userReferences[0], ref) || areSameConversation(c.userReferences[1], ref));
     }
+
+    public async detachConnection(ref: ConversationReference): Promise<void> {          
+        // Ensure we don't already have a connection
+        if (!(await this.isPending(ref) || await this.isEstablished(ref))) {
+            throw new Error('Connection does not exists');
+        }
+        return this.provider.endConnection(ref);        
+    }
 }

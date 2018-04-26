@@ -1,5 +1,6 @@
 import { PendingConnection, EstablishedConnection } from '../Models/Connection';
 import { ConnectionProvider } from './ConnectionProvider';
+import { ConversationReference } from 'botbuilder';
 
 export class InMemoryConnectionProvider implements ConnectionProvider {
     private pendingConnections: PendingConnection[] = [];
@@ -20,6 +21,20 @@ export class InMemoryConnectionProvider implements ConnectionProvider {
 
     addEstablishedConnection(connection: EstablishedConnection): Promise<void> {
         this.establishedConnections.push(connection);
+        return Promise.resolve();
+    }
+
+    endConnection(connection: ConversationReference): Promise<void> {  
+        const pendingConnectionIndex = this.pendingConnections.findIndex(c=> (c.userReference.conversation == connection.conversation));     
+        const establishedConnectionIndex = this.establishedConnections.findIndex(c=> c.userReferences[0].conversation == connection.conversation);
+        
+        if(pendingConnectionIndex !== -1){
+            this.pendingConnections.slice(pendingConnectionIndex);
+        }        
+        if(establishedConnectionIndex !== -1){
+            this.establishedConnections.slice(establishedConnectionIndex);
+        }        
+
         return Promise.resolve();
     }
 }
