@@ -29,6 +29,10 @@ export class ConnectMiddleware implements Middleware {
         return next();
     }
 
+    public async getPendingConnections() {
+        return this.provider.getPendingConnections();
+    }
+
     public async findConnectedTo(ref: Partial<ConversationReference>) {
         if (!ref.user) throw new Error('User object is undefined');
 
