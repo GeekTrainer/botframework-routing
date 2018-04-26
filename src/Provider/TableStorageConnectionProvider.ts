@@ -1,5 +1,5 @@
 import { ConversationReference } from 'botbuilder';
-import { Connection } from '../Models/Connection';
+import { PendingConnection, EstablishedConnection } from '../Models/Connection';
 import { ConnectionProvider } from './ConnectionProvider';
 import * as azure from 'azure-storage';
 import { flatten, unflatten } from 'flat';
@@ -49,11 +49,19 @@ export class TableStorageConnectionProvider implements ConnectionProvider {
         this.tableService = this.createTableService(this.settings.storageAccountOrConnectionString, this.settings.storageAccessKey, this.settings.host);
     }
 
-    // public getConnections(): Promise<Connection[]> {
-    //     return Promise.resolve(this.connections);
-    // }
+    public getPendingConnections(): Promise<PendingConnection[]> {
+        throw new Error('not implemented');
+    }
 
-    public getConnections(): Promise<Connection[]> {
+    public addPendingConnection(connection: PendingConnection): Promise<void> {
+        throw new Error('not implemented');
+    }
+
+    public addEstablishedConnection(connection: EstablishedConnection): Promise<void> {
+        throw new Error('not implemented');
+    }
+
+    public getEstablishedConnections(): Promise<EstablishedConnection[]> {
 
         return this.ensureTable().then(() => {
 
@@ -73,12 +81,12 @@ export class TableStorageConnectionProvider implements ConnectionProvider {
                     return value;
                 });
 
-            const tempresults: Connection[] = [];
+            const tempresults: EstablishedConnection[] = [];
             return tempresults;
             // return Promise.all(results)
             //     .then(items => items
             //         .filter(prop => prop.value !== null)
-            //         .reduce(propsReducer, {}));     // as Connection
+            //         .reduce(propsReducer, {}));     // as EstablishedConnection
         });
     }
 
