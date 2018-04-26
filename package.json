@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "test": "mocha ./lib/tests"
+  },
   "dependencies": {
     "azure-storage": "^2.8.2",
     "botbuilder": "^4.0.0-m3.0",
