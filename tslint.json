@@ -159,7 +159,7 @@
     "prefer-type-cast": true,
     "promise-must-complete": true,
     "quotemark": [
-      true,
+      false,
       "single"
     ],
     "radix": false,
