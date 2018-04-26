@@ -9,15 +9,9 @@ export class CustomTestAdapter extends TestAdapter {
     }
 }
 
-<<<<<<< HEAD
 export const getConversationReference = (conversationId: string, userId: string, userName: string) => {
     return TurnContext.getConversationReference( { 
         from: { id: userId, name: userName }, 
         conversation: { id: conversationId }
     } as Activity ) as ConversationReference;
 }
-=======
-export const getConversationReference = (id: string, name: string) => {
-    return TurnContext.getConversationReference( { from: { id, name } } as Activity ) as ConversationReference;
-};
->>>>>>> 4239b1be26217c7a1ff257f67e170abd2fce230b

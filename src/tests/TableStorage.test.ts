@@ -9,8 +9,8 @@ import { TableStorageConnectionProvider } from '../Provider/TableStorageConnecti
 describe("Table Storage Connection Provider manages users", () => {
     let provider: TableStorageConnectionProvider;
 
-    const user1Reference = getConversationReference("user1", "user1");
-    const user2Reference = getConversationReference("user2", "user2");
+    const user1Reference = getConversationReference("conversation1", "user1", "user1");
+    const user2Reference = getConversationReference("converstaion2", "user2", "user2");
 
     beforeEach(() => {
         provider = new TableStorageConnectionProvider({
