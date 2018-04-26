@@ -8,8 +8,9 @@ import { getConversationReference } from "./helpers";
 describe("In Memory Provider manages users", () => {
     let provider: InMemoryConnectionProvider;
 
-    let user1Reference = getConversationReference("user1", "user1");
-    let user2Reference = getConversationReference("user2", "user2");
+    let user1Reference = getConversationReference("conversation1", "user1", "user1");
+    let user2Reference = getConversationReference("conversation2", "user2", "user2");
+    let user3Reference = getConversationReference("conversation3", "user3", "user3");
 
     beforeEach(() => {
         provider = new InMemoryConnectionProvider();
@@ -34,7 +35,8 @@ describe("In Memory Provider manages users", () => {
 
         let pending = await provider.getPendingConnections();
 
-        assert(pending.length === 1);
+        assert(pending.length === 1 && 
+            pending[0].userReference == user1Reference);
     });
 
     it("Add a established connection", async () => {
@@ -44,7 +46,9 @@ describe("In Memory Provider manages users", () => {
 
         let established = await provider.getEstablishedConnections();
 
-        assert(established.length === 1);
+        assert(established.length === 1 && 
+            established[0].userReferences[0] == user1Reference && 
+            established[0].userReferences[1] == user2Reference);
     });
 
     it("End existing pending connection", async () => {
@@ -80,7 +84,32 @@ describe("In Memory Provider manages users", () => {
         assert(established.length === 0);
     });
 
-    it("End non existing connection", async () => {
+    it("End non existing pending connection", async () => {
+        await provider.addPendingConnection({
+            userReference: user1Reference
+        });
+        await provider.endConnection(user2Reference);
+
+        let pending = await provider.getPendingConnections();
+
+        assert(pending.length === 1 && 
+            pending[0].userReference == user1Reference);
+    });
+
+    it("End non existing established connection", async () => {
+        await provider.addEstablishedConnection({
+            userReferences: [ user1Reference, user2Reference ]
+        });
+        await provider.endConnection(user3Reference);
+
+        let established = await provider.getEstablishedConnections();
+
+        assert(established.length === 1 && 
+            established[0].userReferences[0] == user1Reference && 
+            established[0].userReferences[1] == user2Reference);
+    });
+
+    it("End non existing connection when no connections", async () => {
         await provider.endConnection(user1Reference);
 
         let pending = await provider.getPendingConnections();
