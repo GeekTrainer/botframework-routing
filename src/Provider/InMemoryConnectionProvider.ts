@@ -1,6 +1,7 @@
 import { PendingConnection, EstablishedConnection } from '../Models/Connection';
 import { ConnectionProvider } from './ConnectionProvider';
 import { ConversationReference } from 'botbuilder';
+import { areSameConversation } from '../util';
 
 export class InMemoryConnectionProvider implements ConnectionProvider {
     private pendingConnections: PendingConnection[] = [];
@@ -24,18 +25,17 @@ export class InMemoryConnectionProvider implements ConnectionProvider {
         return Promise.resolve();
     }
 
-    public endConnection(connection: ConversationReference): Promise<void> {
+    public endConnection(ref: ConversationReference): Promise<void> {
         const pendingConnectionIndex = this.pendingConnections.findIndex(c =>
-            (c.userReference.conversation === connection.conversation));
+            areSameConversation(c.userReference, ref));
         const establishedConnectionIndex = this.establishedConnections.findIndex(c =>
-            (c.userReferences[0].conversation === connection.conversation) ||
-            (c.userReferences[1].conversation === connection.conversation));
+            areSameConversation(c.userReferences[0], ref) || areSameConversation(c.userReferences[1], ref));
 
         if (pendingConnectionIndex !== -1) {
-            this.pendingConnections.splice(pendingConnectionIndex);
+            this.pendingConnections.splice(pendingConnectionIndex, 1);
         }
         if (establishedConnectionIndex !== -1) {
-            this.establishedConnections.splice(establishedConnectionIndex);
+            this.establishedConnections.splice(establishedConnectionIndex, 1);
         }
 
         return Promise.resolve();
