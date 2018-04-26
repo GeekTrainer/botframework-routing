@@ -21,7 +21,8 @@
     "url": "https://github.com/GeekTrainer/botframework-routing.git"
   },
   "scripts": {
-    "test": "tsc && nyc mocha tests/",
+    "test": "mocha ./lib/tests",
+    "testnyc": "tsc && nyc mocha tests/",
     "build": "tsc",
     "clean": "erase /q lib\\*.*"
   },
