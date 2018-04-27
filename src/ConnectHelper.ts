@@ -1,38 +1,20 @@
-import { ConversationReference, Middleware, TurnContext, ActivityTypes } from 'botbuilder';
+import { ConversationReference, TurnContext } from 'botbuilder';
 import { ConnectionProvider } from './Provider/ConnectionProvider'
 import { areSameConversation } from './util';
 
-export class ConnectMiddleware implements Middleware {
+export class ConnectHelper {
     private provider: ConnectionProvider;
 
     public constructor(provider: ConnectionProvider) {
         this.provider = provider;
     }
 
-    public async onTurn(context: TurnContext, next: () => Promise<void>): Promise<void> {
-        // Only handle message activities
-        // TODO: what other message types should be forwarded? maybe configurable?
-        if (context.activity.type !== ActivityTypes.Message || !context.activity.text) {
-            return next();
-        }
-
-        // If already connected, forward the message and stop the pipeline
-        const ref = TurnContext.getConversationReference(context.activity);
-        const connected = await this.findConnectedTo(ref);
-        if (connected !== null) {
-            return context.adapter.continueConversation(connected, (forwardContext => {
-                forwardContext.sendActivity(context.activity);
-            }));
-        }
-
-        // Otherwise, continue the pipeline
-        return next();
-    }
-
+    // Get all pending connections
     public async getPendingConnections() {
         return this.provider.getPendingConnections();
     }
 
+    // Find the other user to whom this user is connected (if any)
     public async findConnectedTo(ref: Partial<ConversationReference>) {
         if (!ref.user) throw new Error('User object is undefined');
 
@@ -57,6 +39,13 @@ export class ConnectMiddleware implements Middleware {
 
         // Not connected
         return Promise.resolve(null);
+    }
+
+    // Forward the incoming activity to another user
+    public async forwardTo(context: TurnContext, toRef: Partial<ConversationReference>) {
+        return context.adapter.continueConversation(toRef, async forwardContext => {
+            await forwardContext.sendActivity(context.activity);
+        });
     }
 
     // Start a pending connection (i.e. add user to the "waiting" pool)
@@ -94,6 +83,7 @@ export class ConnectMiddleware implements Middleware {
         });
     }
 
+    // End any connection (pending or established) associated with a user
     public async endConnection(ref: Partial<ConversationReference>): Promise<void> {          
         // Ensure we already have a connection
         if (!(await this.isPending(ref) || await this.isEstablished(ref))) {
