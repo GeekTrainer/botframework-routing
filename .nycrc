@@ -1,9 +1,9 @@
 {
   "extension": [
-    ".js"
+    ".ts"
   ],
   "include": [
-    "lib/**/*.js"
+    "src/**/*.ts"
   ],
   "exclude": [
     "**/node_modules/**",
@@ -12,7 +12,7 @@
     "**/*.d.ts"
   ],
   "reporter": [
-    "html"
+    "text"
   ],
   "all": true,
   "cache": true
