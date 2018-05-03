@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "azure-storage": "^2.8.2",
-    "botbuilder": "^4.0.0-m3.0",
+    "botbuilder": "4.0.0-m3.0",
     "flat": "^4.0.0",
     "restify": "^7.1.1"
   },
