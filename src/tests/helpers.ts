@@ -1,4 +1,4 @@
-import { ConversationReference, ChannelAccount, TestAdapter, TurnContext, Promiseable, Activity } from "botbuilder";
+import { ConversationReference, TestAdapter, TurnContext, Promiseable, Activity } from "botbuilder";
 
 export class CustomTestAdapter extends TestAdapter {
     public continueConversation(reference: Partial<ConversationReference>, logic: (revocableContext: TurnContext) => Promiseable<void>): Promise<void> {

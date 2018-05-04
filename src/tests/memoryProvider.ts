@@ -1,8 +1,6 @@
 import sinon = require("sinon");
 import { assert } from "chai";
 import { InMemoryConnectionProvider } from "../Provider/InMemoryConnectionProvider";
-import { PendingConnection, EstablishedConnection } from '../Models/Connection';
-import { ConversationReference } from "botbuilder";
 import { getConversationReference } from "./helpers";
 
 describe("In Memory Provider manages users", () => {
