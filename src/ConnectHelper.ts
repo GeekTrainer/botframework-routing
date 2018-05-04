@@ -1,5 +1,6 @@
 import { ConversationReference, TurnContext } from 'botbuilder';
 import { ConnectionProvider } from './Provider/ConnectionProvider'
+import { PendingConnection } from './Models/Connection';
 import { areSameConversation } from './util';
 
 export class ConnectHelper {
