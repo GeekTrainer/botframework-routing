@@ -13,6 +13,8 @@
     "routing",
     "handoff"
   ],
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
   "bugs": {
     "url": "https://github.com/GeekTrainer/botframework-routing/issues"
   },

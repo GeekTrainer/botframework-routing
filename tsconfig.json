@@ -3,6 +3,7 @@
     /* Basic Options */
     "target": "ES2015",
     "module": "commonjs",
+    "declaration": true,
     "outDir": "./lib",
     "rootDir": "./src",
     "noImplicitAny": true,
