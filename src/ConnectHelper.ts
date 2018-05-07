@@ -50,19 +50,20 @@ export class ConnectHelper {
     }
 
     // Start a pending connection (i.e. add user to the "waiting" pool)
-    public async startConnection(ref: Partial<ConversationReference>) {
+    public async startConnection(ref: Partial<ConversationReference>, data?: any) {
         // Ensure we don't already have a connection
         if (await this.isPending(ref) || await this.isEstablished(ref)) {
             throw new Error('Connection already exists');
         }
 
         return this.provider.addPendingConnection({
-            userReference: ref
+            userReference: ref,
+            data: data
         });
     }
 
     // Establish an already pending connection (i.e. join to the other end of a pending connection)
-    public async connectTo(self: Partial<ConversationReference>, target: Partial<ConversationReference>) {
+    public async connectTo(self: Partial<ConversationReference>, target: Partial<ConversationReference>, data?: any) {
         // Ensure self isn't already connected to someone
         if (await this.isPending(self) || await this.isEstablished(self)) {
             throw new Error('Connection already exists for self');
@@ -80,7 +81,8 @@ export class ConnectHelper {
 
         // Add a new established connection
         return this.provider.addEstablishedConnection({
-            userReferences: [target, self]
+            userReferences: [target, self],
+            data: data
         });
     }
 

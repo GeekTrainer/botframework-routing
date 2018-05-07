@@ -49,6 +49,28 @@ describe("In Memory Provider manages users", () => {
             established[0].userReferences[1] == user2Reference);
     });
 
+    it("Preserve data in pending connections", async () => {
+        await provider.addPendingConnection({
+            userReference: user1Reference,
+            data: { foo: 'bar' }
+        });
+
+        let pending = await provider.getPendingConnections();
+
+        assert.strictEqual(pending[0].data['foo'], 'bar');
+    });
+
+    it("Preserve data in established connections", async () => {
+        await provider.addEstablishedConnection({
+            userReferences: [ user1Reference, user2Reference ],
+            data: { foo: 'bar' }
+        });
+
+        let established = await provider.getEstablishedConnections();
+
+        assert.strictEqual(established[0].data['foo'], 'bar');
+    });
+
     it("End existing pending connection", async () => {
         await provider.addPendingConnection({
             userReference: user1Reference
