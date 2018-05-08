@@ -1,4 +1,4 @@
-import { ConversationReference, TurnContext } from 'botbuilder';
+import { ConversationReference, TurnContext, Activity } from 'botbuilder';
 import { ConnectionProvider } from './Provider/ConnectionProvider'
 import { PendingConnection } from './Models/Connection';
 import { areSameConversation } from './util';
@@ -43,10 +43,16 @@ export class ConnectHelper {
     }
 
     // Forward the incoming activity to another user
-    public async forwardTo(context: TurnContext, toRef: Partial<ConversationReference>) {
-        return context.adapter.continueConversation(toRef, async forwardContext => {
-            await forwardContext.sendActivity(context.activity);
+    public forwardTo(context: TurnContext, toRef: Partial<ConversationReference>) {
+        return this.sendTo(context, context.activity, toRef);
+    }
+
+    // Send any activity to another user
+    public sendTo(context: TurnContext, activityOrText: string | Partial<Activity>, toRef: Partial<ConversationReference>) {
+        return context.adapter.continueConversation(toRef, async sendContext => {
+            await sendContext.sendActivity(activityOrText);
         });
+
     }
 
     // Start a pending connection (i.e. add user to the "waiting" pool)
@@ -71,8 +77,8 @@ export class ConnectHelper {
 
         // Find target's pending connection
         const allPending = await this.provider.getPendingConnections();
-        const pending = allPending.find(c => areSameConversation(c.userReference, target));
-        if (!pending) {
+        const isTargetPending = allPending.some(c => areSameConversation(c.userReference, target));
+        if (!isTargetPending) {
             throw new Error('Pending connection does not exist for target');
         }
 
